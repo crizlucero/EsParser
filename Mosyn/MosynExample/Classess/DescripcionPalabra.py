@@ -2,12 +2,14 @@ from mosyn.util import AbstractMorphology
 
 class DescripcionPalabra:
 
+    lema = ""
     categoria = 0
     numero = 0
     tipo = 0
     genero = 0
 
-    def __init__(self, categoria, numero, tipo, genero):
+    def __init__(self, lema, categoria, numero, tipo, genero):
+        self.lema = lema
         self.categoria = categoria
         self.numero = numero
         self.tipo = tipo
@@ -15,33 +17,33 @@ class DescripcionPalabra:
 
     def getCategoria(self):
         if self.categoria == AbstractMorphology.CAT_ARTICLE:
-            return "article"
+            return "articulo"
         elif self.categoria == AbstractMorphology.CAT_DETERMINANT:
-            return "determinant"
+            return "determinante"
         elif self.categoria == AbstractMorphology.CAT_ABBREVIATION:
-            return "abbreviation"
+            return "abreviacion"
         elif self.categoria == AbstractMorphology.CAT_ADJECTIVE:
-            return "adjective"
+            return "adjetivo"
         elif self.categoria == AbstractMorphology.CAT_ADVERB:
-            return "adverb"
+            return "adverbio"
         elif self.categoria == AbstractMorphology.CAT_CONJUNCTION:
-            return "conjunction"
+            return "conjuncion"
         elif self.categoria == AbstractMorphology.CAT_INTERJECTION:
-            return "interjection"
+            return "interjeccion"
         elif self.categoria == AbstractMorphology.CAT_NAME:
-            return "name"
+            return "nombre"
         elif self.categoria == AbstractMorphology.CAT_NUMERAL:
             return "numeral"
         elif self.categoria == AbstractMorphology.CAT_ADPOSITION: # Preposition
-            return "adposition/preposition"
+            return "preposicion"
         elif self.categoria == AbstractMorphology.CAT_PRONOUN:
-            return "pronoun"
+            return "pronombre"
         elif self.categoria == AbstractMorphology.CAT_PUNCTUATION:
-            return "punctuation"
+            return "puntuacion"
         elif self.categoria == AbstractMorphology.CAT_VERB:
-            return "verb"
+            return "verbo"
         else:
-            return "unknown"
+            return "desconocido"
 
     def getNumero(self):
         if self.numero == AbstractMorphology.NUMBER_SINGULAR:

@@ -1,79 +1,7 @@
 # -*- coding: iso-8859-15 -*-
+from copy import deepcopy
 import mosyn
-import copy
-from mosyn.util import AbstractMorphology
-
-class DescripcionPalabra:
-
-    lema = ""
-    categoria = 0
-    numero = 0
-    tipo = 0
-    genero = 0
-
-    def __init__(self, lema, categoria, numero, tipo, genero):
-        self.lema = lema
-        self.categoria = categoria
-        self.numero = numero
-        self.tipo = tipo
-        self.genero = genero
-
-    def getCategoria(self):
-        if self.categoria == AbstractMorphology.CAT_ARTICLE:
-            return "articulo"
-        elif self.categoria == AbstractMorphology.CAT_DETERMINANT:
-            return "determinante"
-        elif self.categoria == AbstractMorphology.CAT_ABBREVIATION:
-            return "abreviacion"
-        elif self.categoria == AbstractMorphology.CAT_ADJECTIVE:
-            return "adjetivo"
-        elif self.categoria == AbstractMorphology.CAT_ADVERB:
-            return "adverbio"
-        elif self.categoria == AbstractMorphology.CAT_CONJUNCTION:
-            return "conjuncion"
-        elif self.categoria == AbstractMorphology.CAT_INTERJECTION:
-            return "interjeccion"
-        elif self.categoria == AbstractMorphology.CAT_NAME:
-            return "nombre"
-        elif self.categoria == AbstractMorphology.CAT_NUMERAL:
-            return "numeral"
-        elif self.categoria == AbstractMorphology.CAT_ADPOSITION: # Preposition
-            return "preposicion"
-        elif self.categoria == AbstractMorphology.CAT_PRONOUN:
-            return "pronombre"
-        elif self.categoria == AbstractMorphology.CAT_PUNCTUATION:
-            return "puntuacion"
-        elif self.categoria == AbstractMorphology.CAT_VERB:
-            return "verbo"
-        else:
-            return "desconocido"
-
-    def getNumero(self):
-        if self.numero == AbstractMorphology.NUMBER_SINGULAR:
-            print "singular",
-        elif self.numero == AbstractMorphology.NUMBER_PLURAL:
-            print "plural",
-        elif self.numero == AbstractMorphology.NUMBER_INVARIABLE:
-            print "invariable",
-        elif self.numero == AbstractMorphology.NUMBER_UNKNOWN:
-            print "undefined number",
-        else:
-            print str(self.numero),
-
-    def getTipo(self):
-        if self.tipo == AbstractMorphology.TYPE_GENERAL:
-            print ", it is of general type",
-        elif self.tipo == AbstractMorphology.TYPE_CALIFICATIVE:
-            print ", it is of calificative type",
-
-    def getGenero(self):
-        if self.genero == AbstractMorphology.GENDER_MALE:
-            print "male", self.categoria,
-        elif self.genero == AbstractMorphology.GENDER_FEMALE:
-            print "female", self.categoria,
-        else:
-            print self.categoria, "without gender",
-
+from Classess.DescripcionPalabra import DescripcionPalabra
 
 def main():
     dictionary = mosyn.MorphologicalDictionary("/home/christian/Documentos/mosynapi-master/mosyn/dict/spanish_dict.csv")
@@ -84,59 +12,58 @@ def main():
 
     oracion = []
     aux = []
-    palabras =[]
+    palabras = []
     for labels in processed_data:
         for label in labels:
             palabras.append(DescripcionPalabra(labels[0].get_lema(), label.get_category(), label.get_number(),
                                                label.get_type(), label.get_gender()))
 
     l = 0
-    palabras1 = []
+
     while l < len(palabras):
-        if l != (len(palabras)-1) and palabras[l].lema == palabras[l+1].lema:
-            palabras1.append(palabras[l+1])
+        palabras1 = []
+        if l != (len(palabras) - 1) and palabras[l].lema == palabras[l + 1].lema:
+            palabras1.append(palabras[l + 1])
             l += 1
         palabras1.append(palabras[l])
-        p = copy.deepcopy(palabras1)
-        oracion.append(p)
-        palabras1 = []
+        oracion.append(deepcopy(palabras1))
         l += 1
     i = 0
     aux1 = ''
-    while i <= len(oracion)-1:
+    while i <= len(oracion) - 1:
         for j in xrange(0, len(oracion[i])):
             aux1 = ''
             if oracion[i][j].getCategoria() == 'nombre' \
                     or oracion[i][j].getCategoria() == 'pronombre':
-                for k in xrange(0, len(oracion[i+1])):
-                    if oracion[i+1][k].getCategoria() == 'nombre':
+                for k in xrange(0, len(oracion[i + 1])):
+                    if oracion[i + 1][k].getCategoria() == 'nombre':
                         i += 1
                         break
                 aux1 = 'SN'
             elif oracion[i][j].getCategoria() == 'determinante' \
                     or oracion[i][j].getCategoria() == 'conjuncion':
-                for k in xrange(0, len(oracion[i+1])):
-                    if oracion[i+1][k].getCategoria() == 'nombre' \
-                            or oracion[i+1][k].getCategoria() == 'pronombre' \
-                            or oracion[i+1][k].getCategoria() == 'adjetivo':
+                for k in xrange(0, len(oracion[i + 1])):
+                    if oracion[i + 1][k].getCategoria() == 'nombre' \
+                            or oracion[i + 1][k].getCategoria() == 'pronombre' \
+                            or oracion[i + 1][k].getCategoria() == 'adjetivo':
                         aux1 = 'SD'
                         i += 1
                         break
             elif oracion[i][j].getCategoria() == 'verbo':
                 aux1 = 'V'
             elif oracion[i][j].getCategoria() == 'adjetivo':
-                aux1 = 'P'
+                aux1 = 'SD'
             elif oracion[i][j].getCategoria() == 'adverbio':
-                for k in xrange(0, len(oracion[i+1])):
-                    if oracion[i+1][k].getCategoria() == 'adjetivo':
-                        aux1 = 'P'
+                for k in xrange(0, len(oracion[i + 1])):
+                    if oracion[i + 1][k].getCategoria() == 'adjetivo':
+                        aux1 = 'SD'
                         i += 1
             elif oracion[i][j].getCategoria() == 'preposicion':
-                for k in xrange(0, len(oracion[i+1])):
-                    if oracion[i+1][k].getCategoria() == 'nombre' \
-                            or oracion[i+1][k].getCategoria() == 'pronombre' \
-                            or oracion[i+1][k].getCategoria() == 'adjetivo' \
-                            or oracion[i+1][k].getCategoria() == 'adverbio':
+                for k in xrange(0, len(oracion[i + 1])):
+                    if oracion[i + 1][k].getCategoria() == 'nombre' \
+                            or oracion[i + 1][k].getCategoria() == 'pronombre' \
+                            or oracion[i + 1][k].getCategoria() == 'adjetivo' \
+                            or oracion[i + 1][k].getCategoria() == 'adverbio':
                         aux1 = 'P'
                         i += 1
                         break
@@ -150,8 +77,44 @@ def main():
         else:
             return False
 
-    return aux
+    return VerificarOracion(aux)
 
+
+def VerificarOracion(oracion):
+    while len(oracion) != 1:
+        i = 0
+        aux1 = []
+        if len(oracion) % 2 != 0:
+            oracion.append("")
+        while i < len(oracion) - 1:
+            aux = ""
+            if (oracion[i] == "SN" and oracion[i + 1] == "SD") \
+                    or (oracion[i] == "SD" and oracion[i + 1] == "SN"):
+                aux = "SD"
+                i += 1
+            elif (oracion[i] == "SN" and oracion[i + 1] == "SN") \
+                    or oracion[i] == "SN":
+                aux = "SN"
+            elif (oracion[i] == "SD" and oracion[i + 1] == "V") \
+                    or (oracion[i] == "V") \
+                    or (oracion[i] == "ST"):
+                aux = "ST"
+                i += 1
+            elif oracion[i] == 'C' and oracion[i + 1] == 'ST':
+                aux = "SC"
+            elif oracion[i] == "SD" and oracion[i + 1] == "SC":
+                aux = "SD"
+            elif oracion[i] == "SD" and oracion[i + 1] == "ST":
+                aux = "O"
+            if aux != "":
+                aux1.append(aux)
+            i += 1
+        oracion = deepcopy(aux1)
+    return oracion
+
+
+def VerificaTiempo(oracion):
+    return False
 
 
 if __name__ == '__main__':
