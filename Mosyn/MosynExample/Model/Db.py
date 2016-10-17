@@ -1,6 +1,6 @@
 import couchdb
 
-class Database:
+class DB:
     conn = None
     db = None
 

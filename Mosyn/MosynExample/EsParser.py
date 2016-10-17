@@ -1,7 +1,10 @@
 # -*- coding: iso-8859-15 -*-
 from copy import deepcopy
+
 import mosyn
-from Classess.DescripcionPalabra import DescripcionPalabra
+from Model.DescripcionPalabra import DescripcionPalabra
+from Model.Oracion import Oracion
+
 
 def main():
     dictionary = mosyn.MorphologicalDictionary("/home/christian/Documentos/mosynapi-master/mosyn/dict/spanish_dict.csv")
