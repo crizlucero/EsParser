@@ -4,7 +4,7 @@ from Union import Union
 class Arbol:
     def __init__(self):
         self.nivel = 0
-        self.union = Union()
+        self.union = []
 
     @property
     def _nivel(self):

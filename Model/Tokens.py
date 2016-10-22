@@ -1,7 +1,10 @@
+from Tags import Tags
+
+
 class Tokens:
     def __init__(self):
         self.palabra = None
-        self.tags = None
+        self.tags = []
 
     @property
     def _palabra(self):

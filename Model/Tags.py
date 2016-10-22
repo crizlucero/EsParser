@@ -4,7 +4,7 @@ from DescripcionPalabra import DescripcionPalabra
 class Tags:
     def __init__(self):
         self.Eagle = None
-        self.DescripcionPalabra = DescripcionPalabra()
+        self.DescripcionPalabra = None
 
     @property
     def _eagle(self):
