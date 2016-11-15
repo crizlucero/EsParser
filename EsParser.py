@@ -1,10 +1,15 @@
 # -*- coding: iso-8859-15 -*-
 from copy import deepcopy
 
+#Local imports
 import mosyn
 from Model.DescripcionPalabra import DescripcionPalabra
 from Model.Oracion import Oracion
 from Model.Tags import Tags
+from Model.Db import DB
+
+#Global Vars
+frase = Oracion()
 
 
 def main():
@@ -17,7 +22,7 @@ def main():
     oracion = []
     aux = []
     palabras = []
-    frase = Oracion()
+
     for labels in processed_data:
         for label in labels:
             palabras.append(DescripcionPalabra(label.get_lema(), label.get_category(), label.get_number(),
@@ -39,6 +44,7 @@ def main():
         l += 1
     i = 0
     aux1 = ''
+    print frase.toJSON()
     while i <= len(oracion) - 1:
         for j in xrange(0, len(oracion[i])):
             aux1 = ''
@@ -128,4 +134,6 @@ def VerificaTiempo(oracion):
 
 if __name__ == '__main__':
     x = main()
+    db = DB()
+    db.saveData(frase.toJSON())
     print x

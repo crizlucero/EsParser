@@ -1,6 +1,7 @@
 from uuid import uuid4
 from Tokens import Tokens
 from Arbol import Arbol
+from json import dumps
 
 
 class Oracion:
@@ -33,3 +34,7 @@ class Oracion:
     @_arbol.setter
     def _arbol(self, arbol):
         self.arbol = arbol
+
+    def toJSON(self):
+        return dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
