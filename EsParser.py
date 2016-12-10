@@ -5,6 +5,8 @@ from copy import deepcopy
 import mosyn
 from Model.DescripcionPalabra import DescripcionPalabra
 from Model.Oracion import Oracion
+from Model.Arbol import Arbol
+from Model.Union import Union
 from Model.Tags import Tags
 from Model.Db import DB
 
@@ -44,16 +46,24 @@ def main():
         l += 1
     i = 0
     aux1 = ''
-    print frase.toJSON()
+
     while i <= len(oracion) - 1:
+        arbol = Arbol()
+        arbol.nivel = i
         for j in xrange(0, len(oracion[i])):
             aux1 = ''
+            union = Union()
             if oracion[i][j].getCategoria() == 'nombre' \
                     or oracion[i][j].getCategoria() == 'pronombre':
+
                 for k in xrange(0, len(oracion[i + 1])):
                     if oracion[i + 1][k].getCategoria() == 'nombre':
+                        union.der = oracion[i + 1][k].getCategoria()
                         i += 1
                         break
+                union.izq = oracion[i][j].getCategoria()
+                union.generan = 'SN'
+                arbol.union.append(union)
                 aux1 = 'SN'
             elif oracion[i][j].getCategoria() == 'determinante' \
                     or oracion[i][j].getCategoria() == 'conjuncion':
@@ -61,16 +71,30 @@ def main():
                     if oracion[i + 1][k].getCategoria() == 'nombre' \
                             or oracion[i + 1][k].getCategoria() == 'pronombre' \
                             or oracion[i + 1][k].getCategoria() == 'adjetivo':
+                        union.der = oracion[i + 1][k].getCategoria()
+                        union.izq = oracion[i][j].getCategoria()
+                        union.generan = 'SD'
+                        arbol.union.append(union)
                         aux1 = 'SD'
                         i += 1
                         break
             elif oracion[i][j].getCategoria() == 'verbo':
+                union.izq = oracion[i][j].getCategoria()
+                union.generan = 'V'
+                arbol.union.append(union)
                 aux1 = 'V'
             elif oracion[i][j].getCategoria() == 'adjetivo':
+                union.izq = oracion[i][j].getCategoria()
+                union.generan = 'SD'
+                arbol.union.append(union)
                 aux1 = 'SD'
             elif oracion[i][j].getCategoria() == 'adverbio':
                 for k in xrange(0, len(oracion[i + 1])):
                     if oracion[i + 1][k].getCategoria() == 'adjetivo':
+                        union.der = oracion[i + 1][k].getCategoria()
+                        union.izq = oracion[i][j].getCategoria()
+                        union.generan = 'SD'
+                        frase.arbol.union.append(union)
                         aux1 = 'SD'
                         i += 1
             elif oracion[i][j].getCategoria() == 'preposicion':
@@ -79,6 +103,10 @@ def main():
                             or oracion[i + 1][k].getCategoria() == 'pronombre' \
                             or oracion[i + 1][k].getCategoria() == 'adjetivo' \
                             or oracion[i + 1][k].getCategoria() == 'adverbio':
+                        union.der = oracion[i + 1][k].getCategoria()
+                        union.izq = oracion[i][j].getCategoria()
+                        union.generan = 'SD'
+                        arbol.union.append(union)
                         aux1 = 'P'
                         i += 1
                         break
@@ -87,6 +115,8 @@ def main():
             i += 1
             if aux1 != '':
                 break
+        frase.arbol.append(arbol)
+
         if aux1 != '':
             aux.append(aux1)
         else:
@@ -131,9 +161,8 @@ def VerificarOracion(oracion):
 def VerificaTiempo(oracion):
     return False
 
-
 if __name__ == '__main__':
     x = main()
     db = DB()
     db.saveData(frase.toJSON())
-    print x
+    print frase.toJSON()

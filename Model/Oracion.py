@@ -9,7 +9,7 @@ class Oracion:
         self.oracionID = uuid4()
         self.oracion = None
         self.tokens = Tokens()
-        self.arbol = Arbol()
+        self.arbol = []
 
     @property
     def _oracion(self):
